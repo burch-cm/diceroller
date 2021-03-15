@@ -2,7 +2,8 @@ library(shiny)
 library(shinydashboard)
 library(ggplot2)
 library(scales)
-library(tidyverse)
+library(magrittr)
+library(dplyr)
 source("roll_recursive.R")
 
 # UI
