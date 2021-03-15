@@ -16,18 +16,14 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 
-# basic shiny functionality
-RUN R -e "install.packages(c('shiny', 'rmarkdown', 'shinydashboard', 'ggplot2'), repos='https://cloud.r-project.org/')"
-
-# install dependencies of the diceroller app
-RUN R -e "install.packages(c('scales', 'magrittr', 'dplyr'), repos='https://cloud.r-project.org/')"
+# install required packages
+RUN R -e "install.packages(c('shiny', 'rmarkdown', 'shinydashboard', 'ggplot2', 'scales', 'magrittr', 'dplyr'), repos='https://cloud.r-project.org/')"
 
 # copy the app to the image
-RUN mkdir /root/diceroller
-COPY diceroller /root/diceroller
-
-COPY Rprofile.site /usr/lib/R/etc/
+# RUN mkdir /root/diceroller
+COPY ./diceroller/ .
+COPY Rprofile.site .
 
 EXPOSE 3838
 
-CMD ["R", "-e", "shiny::runApp('/root/diceRoller')"]
+CMD ["R", "-e", "shiny::runApp('diceroller')"]
