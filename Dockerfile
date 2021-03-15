@@ -20,10 +20,11 @@ RUN apt-get update && apt-get install -y \
 RUN R -e "install.packages(c('shiny', 'rmarkdown', 'shinydashboard', 'ggplot2', 'scales', 'magrittr', 'dplyr'), repos='https://cloud.r-project.org/')"
 
 # copy the app to the image
-# RUN mkdir /root/diceroller
-COPY ./diceroller/ .
+RUN mkdir diceroller-app
+COPY ./diceroller-app/app.R diceroller-app/app.R
+COPY ./diceroller-app/roll_recursive.R diceroller-app/roll_recursive.R
 COPY Rprofile.site .
 
 EXPOSE 3838
 
-CMD ["R", "-e", "shiny::runApp('diceroller')"]
+CMD ["R", "-e", "shiny::runApp('diceroller-app', port=3838)"]

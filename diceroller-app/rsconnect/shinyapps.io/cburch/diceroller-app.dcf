@@ -1,0 +1,12 @@
+name: diceroller-app
+title: diceroller-app
+username:
+account: cburch
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3796416
+bundleId: 4349978
+url: https://cburch.shinyapps.io/diceroller-app/
+when: 1615846039.3796
+asMultiple: FALSE
+asStatic: FALSE
