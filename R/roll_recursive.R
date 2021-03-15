@@ -1,7 +1,7 @@
 library(purrr)
 
-roll_recursive <- function(sides = 10, again = 10) {
-    d <- sample(x = sides, size = 1)
+roll_recursive <- function(sides = 10, again = 10, ...) {
+    d <- sample(x = sides, size = 1, ...)
     
     if (d < again) {
         return(d)
@@ -11,7 +11,7 @@ roll_recursive <- function(sides = 10, again = 10) {
 }
 
 roll_n <- function(sides = 10, n = 1, ...) {
-    if (n > 1 & length(sides) == 1) {
+    if (n > 1) {
         sides <- rep(sides, n)
     }
     res <- purrr::map(sides, roll_recursive)
@@ -27,3 +27,5 @@ rote <- function(x, reroll_under = 8, append = TRUE, ...) {
     rerolls <- roll_n(n = n_rerolls, ...)
     append(x, rerolls)
 }
+
+##### classes #####
