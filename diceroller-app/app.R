@@ -12,20 +12,20 @@ ui <- dashboardPage(
     dashboardHeader(title = "Dice Roller App"),
     ##### sidebar #####
     dashboardSidebar(
-        numericInput("k_sides",
-                     "Number of sides/faces per die:",
-                     min = 1,
-                     max = 100,
-                     step = 1,
-                     value = 10),
         numericInput("n_dice",
                      "Number of dice to roll:",
                      min = 1,
                      max = 30,
                      step = 1,
                      value = 1),
+        numericInput("k_sides",
+                     "Number of sides/faces per die:",
+                     min = 1,
+                     max = 100,
+                     step = 1,
+                     value = 10),
         checkboxInput("roll_again_check",
-                      "Reroll dice over a specific value?"),
+                      "Roll-again: reroll dice over a specific value?"),
         conditionalPanel(condition = "input.roll_again_check == true",
                          numericInput("roll_again_value",
                                       "Roll values at or above this score again:",
@@ -33,8 +33,9 @@ ui <- dashboardPage(
                                       max = 100,
                                       value = 0,
                                       step = 1)),
+        
         checkboxInput("rote_quality",
-                      "Use the 'rote' quality for this roll?"),
+                      "Rote quality: re-roll failed dice once?"),
         actionButton("button_roll_dice",
                      "Roll!")
     ),
@@ -43,9 +44,10 @@ ui <- dashboardPage(
         # row 1
         fluidRow(
             box(title = "Dice Results", 
-                width = 8, 
+                width = 6, 
                 textOutput("dice_results")),
-            valueBoxOutput("total_successes")
+            valueBoxOutput("total_sum", width = 3),
+            valueBoxOutput("total_successes", width = 3)
         ),
         
         # row 2
@@ -107,13 +109,20 @@ server <- function(input, output, session) {
     # show all dice values rolled
     output$dice_results <- renderText({
         if (is.null(dice_data$dice)) return()
-        dice_data$dice
+        rev(dice_data$dice)
     })
     
     # show count of successes based on success cutoff score
+    output$total_sum <- renderValueBox({
+        valueBox(sum(dice_data$dice), 
+                 "Dice Sum",
+                 icon = icon("dice", lib = "font-awesome"))
+    })
+    
     output$total_successes <- renderValueBox({
         valueBox(sum(dice_data$dice >= input$success_cutoff),
-                 "Total Successes")
+                 "Total Successes",
+                 icon = icon("check", lib = "font-awesome"))
         
     })
     
@@ -125,7 +134,8 @@ server <- function(input, output, session) {
             count()
         ybreaks <- c(1:max(df$n))
         df %>%
-            mutate(success_cat = if_else(dice >= input$success_cutoff, "success", "failure")) %>% 
+            mutate(success_cat = if_else(dice >= input$success_cutoff, "success", "failure"),
+                   dice = factor(dice)) %>% 
             ggplot(aes(x = dice, y = n)) + 
             geom_bar(stat = "identity", aes(fill = success_cat), col = "black") + 
             scale_fill_manual(values = c("success" = "lightblue", "failure" = "lightgrey")) +
