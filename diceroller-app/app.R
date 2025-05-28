@@ -129,11 +129,11 @@ server <- function(input, output, session) {
             ggplot(aes(x = dice, y = n)) + 
             geom_bar(stat = "identity", aes(fill = success_cat), col = "black") + 
             scale_fill_manual(values = c("success" = "lightblue", "failure" = "lightgrey")) +
-            theme_bw() +
-            scale_x_continuous(breaks = pretty_breaks(n = input$k_sides)) +
-            scale_y_continuous(breaks = ybreaks) +
+            scale_x_discrete(limits = factor(c(1:input$k_sides))) +
+            scale_y_continuous(breaks = ybreaks, limits = c(0, max(ybreaks))) +
             guides(fill = FALSE) +
-            labs(x = "die face rolled", y = "count")
+            labs(x = "die face rolled", y = "count") +
+            theme_bw()
     })
 }
 
