@@ -1,9 +1,9 @@
 library(purrr)
 
-roll_recursive <- function(sides = 10, again = 10, ...) {
+roll_recursive <- function(sides = 10, again = NULL, ...) {
     d <- sample(x = sides, size = 1, ...)
     
-    if (d < again) {
+    if (is.null(again) || d < again) {
         return(d)
     } else {
         return(c(d, roll_recursive(sides, again)))
